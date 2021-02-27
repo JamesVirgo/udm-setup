@@ -390,6 +390,7 @@ def run():
     fishnet_file = None
     vector_file_list = None
     fishnet_uid = None
+    number_of_new_dwellings = None
     lads = None
     bbox = None
 
@@ -404,7 +405,10 @@ def run():
 
     # GET PARAMETERS
     # get the fishnet UID if passed by user
-    fishnet_uid = os.getenv(['FISHNET_UID'])
+    fishnet_uid = os.getenv('FISHNET_UID')
+
+    # get the number of dwellings if passed by the user
+    number_of_new_dwellings = os.getenv('NEW_DWELLINGS')
 
     # GET DATA FILES
     # get the fishnet file
@@ -443,6 +447,7 @@ def run():
     # check the expected constraint files exists
     check_files_exist(df_constraints, constraint_file_list, output_dir)
 
+    exit(2)
     # run the processing
     run_processing(files=vector_file_list, fishnet=fishnet_file, area_codes=lads, output_dir=output_dir, fishnet_uid=fishnet_uid)
     return
@@ -452,6 +457,7 @@ def run():
 #    run()
 
 #generate_fishnet(lads=['E08000021'])
-generate_fishnet()
+#generate_fishnet()
 #run_processing(layers={'water-bodies':{}}, area_codes='E08000021', area_scale='lad')
 #run_processing(layers={'current-dev':{}})
+run()
