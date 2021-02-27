@@ -174,7 +174,7 @@ def read_attractor_csv(input_file_path, output_dir):
     df['csv'] = csv_column
     df['asc'] = asc_column
 
-    df.to_csv(os.path.join(output_dir,'in_mce_ras_dbl.csv'), index=False, columns=['name','csv','weight','convert'])
+    df.to_csv(os.path.join(output_dir,'in_mce_ras_dbl.csv'), index=False, columns=['asc','csv','weight','convert'])
 
     return df
 
@@ -203,7 +203,7 @@ def read_constraint_csv(input_file_path, output_dir):
     df['csv'] = csv_column
     df['asc'] = asc_column
 
-    df.to_csv(os.path.join(output_dir, 'in_mce_ras_int.csv'), index=False, columns=['name','csv','weight','convert'])
+    df.to_csv(os.path.join(output_dir, 'in_mce_ras_int.csv'), index=False, columns=['asc','csv','weight','convert'])
 
     return df
 
@@ -215,11 +215,20 @@ def check_files_exist(df, data_file_list, data_dir):
     # get the list of defined names to check for files
     expected_file_list = df['name'].to_list()
 
+    data_files = {}
+    for file in data_file_list:
+        file_name = file.split('/')[-1]
+        data_files[(file_name.split('.')[0])] = file
+
     for expected_file in expected_file_list:
-        if expected_file in data_file_list:
+        print(data_files)
+        print(expected_file)
+        if expected_file in data_files.keys():
             # file found
             # move to data directory
-            copyfile(expected_file, os.path.join(data_dir, expected_file))
+            print(os.path.join(data_files[expected_file]))
+            print(os.path.join(data_dir, expected_file))
+            copyfile(os.path.join(data_files[expected_file]), os.path.join(data_dir, expected_file + '.' + data_files[expected_file].split('.')[-1]))
         else:
             # file not found, return error
             print('ERROR! Could not find expected file (%s). Passed files: %s.' %(expected_file, data_file_list))
@@ -426,10 +435,10 @@ def run():
     vector_file_list = glob.glob(os.path.join(input_dir, 'vectorfiles', '*.*'))
 
     # get attractor .csv
-    attactor_csv_path = glob.glob(os.path.join(input_dir, data_dir_attractor_csv, '*.csv'))
+    attactor_csv_path = glob.glob(os.path.join(input_dir, data_dir_attractor_csv, '*.csv'))[0]
 
     # get constraint .csv
-    constraint_csv_path = glob.glob(os.path.join(input_dir, data_dir_constraint_csv, '*.csv'))
+    constraint_csv_path = glob.glob(os.path.join(input_dir, data_dir_constraint_csv, '*.csv'))[0]
 
     # get the list of attractor files
     attractor_file_list = glob.glob(os.path.join(input_dir, data_dir_attractors, '*.*'))

@@ -23,14 +23,14 @@ An integer value for the number of new dwellings to be built
 ### Attractor input file
 * file type: .csv 
 * headings:
-  * name (layer/filename)
+  * name (layer/filename), needs to match the name of the file on DAFNI
   * data type (raster, vector, download)
   * weight (integer weighting value, between 0-1)
 
 ### Constraint input file
 * file type: .csv
 * headings:
-  * name (layer/filename)
+  * name (layer/filename), needs to match the name of the file on DAFNI
   * data type (raster, vector, download)
   * weight (integer weighting value, between 0-1)
     
