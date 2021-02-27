@@ -161,17 +161,20 @@ def read_attractor_csv(input_file_path, output_dir):
     df = df.assign(convert='y')
 
     # convert the 'input' column into a list
-    input_list = df['input'].tolist()
+    input_list = df['name'].tolist()
 
     # create a list for the csv column with csv file names
     csv_column = []
+    asc_column = []
     for file in input_list:
         csv_column.append(file.split('.')[0] + '.csv')
+        asc_column.append(file.split('.')[0] + '.asc')
 
     # add the csv column to the dataframe
     df['csv'] = csv_column
+    df['asc'] = asc_column
 
-    df.to_csv(os.path.join(output_dir,'in_mce_ras_dbl.csv'), index=False)
+    df.to_csv(os.path.join(output_dir,'in_mce_ras_dbl.csv'), index=False, columns=['name','csv','weight','convert'])
 
     return df
 
@@ -187,19 +190,31 @@ def read_constraint_csv(input_file_path, output_dir):
     df = df.assign(convert='y')
 
     # convert the 'input' column into a list
-    input_list = df['input'].tolist()
+    input_list = df['name'].tolist()
 
     # create a list for the csv column with csv file names
     csv_column = []
+    asc_column = []
     for file in input_list:
         csv_column.append(file.split('.')[0] + '.csv')
+        asc_column.append(file.split('.')[0] + '.asc')
 
     # add the csv column to the dataframe
     df['csv'] = csv_column
+    df['asc'] = asc_column
 
-    df.to_csv(os.path.join(output_dir, 'in_mce_ras_int.csv'), index=False)
+    df.to_csv(os.path.join(output_dir, 'in_mce_ras_int.csv'), index=False, columns=['name','csv','weight','convert'])
+
+    return df
+
+
+def attractors_check_files_exist(df, attractors_file_list):
+    """
+    Check each of the files defined by the user exist
+    """
 
     return
+
 
 def run_processing(output_dir='/data/outputs', files=[], layers={}, area_codes=['E00042673',], area_scale='oa', fishnet=None, fishnet_uid='FID'):
     """
@@ -405,10 +420,10 @@ def run():
 
     # check the passed attractor files exist and save udm input file
     df_attractors = read_attractor_csv(attactor_csv_path, output_dir)
+    attractors_check_files_exist()
 
     # check the passed constraint files exist and save udm input file
     df_constraints = read_constraint_csv(constraint_csv_path, output_dir)
-
 
     # run the processing
     run_processing(files=vector_file_list, fishnet=fishnet_file, area_codes=lads, output_dir=output_dir, fishnet_uid=fishnet_uid)
