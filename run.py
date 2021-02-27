@@ -10,7 +10,7 @@ Issues
 """
 
 import requests, json, os, sys, glob
-sys.path.insert(0, "/udm-rasteriser")
+sys.path.insert(0, "udm-rasteriser")
 from classes import Config, FishNet, Rasteriser
 from geopandas import GeoDataFrame
 import geopandas
@@ -35,7 +35,7 @@ def get_environment_variables():
     return conf
 
 
-def generate_fishnet(data_dir='/outputs', output_file='fishnet_100m.tif', bbox=[419000, 173500, 572500, 318500], lads=None):
+def generate_fishnet(output_dir='', output_file='fishnet.geojson', bbox=[419000, 173500, 572500, 318500], lads=None):
     """
     Generate a fishnet (grid) over within the given bounding box and export as a raster (.tif).
 
@@ -228,7 +228,7 @@ def run_processing(output_dir='/data/outputs', files=[], layers={}, area_codes=[
             response = requests.get(request_string, auth=(conf['username'], conf['password']))
 
         # process response
-        data = process_response(response=response, layer_name=layer_name, data_dir=data_dir)
+        data = process_response(response=response, layer_name=layer_name, data_dir=output_dir)
 
         # convert data to a geopandas dataframe
         gdf = geopandas.read_file(data)
@@ -236,8 +236,6 @@ def run_processing(output_dir='/data/outputs', files=[], layers={}, area_codes=[
         # if any post querying process required
         if layer_name == 'water-bodies':
             # filter data
-            #print(gdf.columns)
-            #print(gdf['theme'].head())
 
             # convert to json for rasterising
             data = gdf.to_json()
@@ -298,9 +296,16 @@ def run():
     input_dir = os.path.join(data_path, 'inputs')
     output_dir = os.path.join(data_path, 'outputs')
 
+    # data dirs
+    # attractors
+    data_dir_attractors = 'attractors'
+    # constraints
+    data_dir_constraints = 'constraints'
+
     # declare as None, future updates will use these to check for valid set of inputs
     fishnet_file = None
-    files_to_rasterise = None
+    vector_file_list = None
+    fishnet_uid = None
     lads = None
     bbox = None
 
@@ -313,6 +318,11 @@ def run():
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
 
+    # GET PARAMETERS
+    # get the fishnet UID if passed by user
+    fishnet_uid = os.getenv(['FISHNET_UID'])
+
+    # GET DATA FILES
     # get the fishnet file
     fishnet_file = glob.glob(os.path.join(input_dir, 'fishnet', '*.gpkg')) + glob.glob(os.path.join(input_dir, 'fishnet', '*.geojson'))
     if len(fishnet_file) == 0:
@@ -326,16 +336,22 @@ def run():
 
     # get the list of files to rasterise
     vector_file_list = glob.glob(os.path.join(input_dir, 'vectorfiles', '*.*'))
-    print(fishnet_file)
-    print(vector_file_list)
-    run_processing(files=vector_file_list, fishnet=fishnet_file, area_codes=lads, output_dir=output_dir)
+
+    # get the list of attractor files
+    attractor_file_list = glob.glob(os.path.join(input_dir, data_dir_attractors, '*.*'))
+
+    # get the list of constraint files
+    constraint_file_list = glob.glob(os.path.join(input_dir, data_dir_constraints, '*.*'))
+
+    # run the processing
+    run_processing(files=vector_file_list, fishnet=fishnet_file, area_codes=lads, output_dir=output_dir, fishnet_uid=fishnet_uid)
     return
 
 
-if __name__ == '__main__':
-    run()
+#if __name__ == '__main__':
+#    run()
 
 #generate_fishnet(lads=['E08000021'])
-#generate_fishnet()
+generate_fishnet()
 #run_processing(layers={'water-bodies':{}}, area_codes='E08000021', area_scale='lad')
 #run_processing(layers={'current-dev':{}})
