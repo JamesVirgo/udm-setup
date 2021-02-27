@@ -12,8 +12,7 @@ Issues
 import requests, json, os, sys, glob
 sys.path.insert(0, "udm-rasteriser")
 from classes import Config, FishNet, Rasteriser
-from geopandas import GeoDataFrame
-import geopandas
+import geopandas, pandas
 from shutil import copyfile
 from io import BytesIO
 
@@ -150,6 +149,57 @@ def move_output(file_name, output_dir):
         print('ERROR! Output raster has not been generated or found at the expected location.')
     return
 
+
+def read_attractor_csv(input_file_path, output_dir):
+    """
+    Read user input attractor csv and write udm input. Return DF for other methods.
+    """
+    # read in file
+    df = pandas.read_csv(input_file_path)
+
+    # add the convert column for all entries
+    df = df.assign(convert='y')
+
+    # convert the 'input' column into a list
+    input_list = df['input'].tolist()
+
+    # create a list for the csv column with csv file names
+    csv_column = []
+    for file in input_list:
+        csv_column.append(file.split('.')[0] + '.csv')
+
+    # add the csv column to the dataframe
+    df['csv'] = csv_column
+
+    df.to_csv(os.path.join(output_dir,'in_mce_ras_dbl.csv'), index=False)
+
+    return df
+
+
+def read_constraint_csv(input_file_path, output_dir):
+    """
+    Read user input constraint csv and write udm input. Return DF for other methods.
+    """
+    # read in file
+    df = pandas.read_csv(input_file_path)
+
+    # add the convert column for all entries
+    df = df.assign(convert='y')
+
+    # convert the 'input' column into a list
+    input_list = df['input'].tolist()
+
+    # create a list for the csv column with csv file names
+    csv_column = []
+    for file in input_list:
+        csv_column.append(file.split('.')[0] + '.csv')
+
+    # add the csv column to the dataframe
+    df['csv'] = csv_column
+
+    df.to_csv(os.path.join(output_dir, 'in_mce_ras_int.csv'), index=False)
+
+    return
 
 def run_processing(output_dir='/data/outputs', files=[], layers={}, area_codes=['E00042673',], area_scale='oa', fishnet=None, fishnet_uid='FID'):
     """
@@ -297,6 +347,10 @@ def run():
     output_dir = os.path.join(data_path, 'outputs')
 
     # data dirs
+    # attractor csv
+    data_dir_attractor_csv = 'attractor_csv'
+    # attractor csv
+    data_dir_constraint_csv = 'constraint_csv'
     # attractors
     data_dir_attractors = 'attractors'
     # constraints
@@ -337,11 +391,24 @@ def run():
     # get the list of files to rasterise
     vector_file_list = glob.glob(os.path.join(input_dir, 'vectorfiles', '*.*'))
 
+    # get attractor .csv
+    attactor_csv_path = glob.glob(os.path.join(input_dir, data_dir_attractor_csv, '*.csv'))
+
+    # get constraint .csv
+    constraint_csv_path = glob.glob(os.path.join(input_dir, data_dir_constraint_csv, '*.csv'))
+
     # get the list of attractor files
     attractor_file_list = glob.glob(os.path.join(input_dir, data_dir_attractors, '*.*'))
 
     # get the list of constraint files
     constraint_file_list = glob.glob(os.path.join(input_dir, data_dir_constraints, '*.*'))
+
+    # check the passed attractor files exist and save udm input file
+    df_attractors = read_attractor_csv(attactor_csv_path, output_dir)
+
+    # check the passed constraint files exist and save udm input file
+    df_constraints = read_constraint_csv(constraint_csv_path, output_dir)
+
 
     # run the processing
     run_processing(files=vector_file_list, fishnet=fishnet_file, area_codes=lads, output_dir=output_dir, fishnet_uid=fishnet_uid)
