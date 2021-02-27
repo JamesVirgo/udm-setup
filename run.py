@@ -208,10 +208,25 @@ def read_constraint_csv(input_file_path, output_dir):
     return df
 
 
-def attractors_check_files_exist(df, attractors_file_list):
+def check_files_exist(df, data_file_list, data_dir):
     """
     Check each of the files defined by the user exist
     """
+    # get the list of defined names to check for files
+    expected_file_list = df['name'].to_list()
+
+    for expected_file in expected_file_list:
+        if expected_file in data_file_list:
+            # file found
+            # move to data directory
+            copyfile(expected_file, os.path.join(data_dir, expected_file))
+        else:
+            # file not found, return error
+            print('ERROR! Could not find expected file (%s). Passed files: %s.' %(expected_file, data_file_list))
+            exit(2)
+            return
+
+    return
 
     return
 
@@ -418,12 +433,15 @@ def run():
     # get the list of constraint files
     constraint_file_list = glob.glob(os.path.join(input_dir, data_dir_constraints, '*.*'))
 
-    # check the passed attractor files exist and save udm input file
+    # read the csv input file and save udm input file
     df_attractors = read_attractor_csv(attactor_csv_path, output_dir)
-    attractors_check_files_exist()
+    # check the expected attractor files exist
+    check_files_exist(df_attractors, attractor_file_list, output_dir)
 
-    # check the passed constraint files exist and save udm input file
+    # read the csv input file and save udm input file
     df_constraints = read_constraint_csv(constraint_csv_path, output_dir)
+    # check the expected constraint files exists
+    check_files_exist(df_constraints, constraint_file_list, output_dir)
 
     # run the processing
     run_processing(files=vector_file_list, fishnet=fishnet_file, area_codes=lads, output_dir=output_dir, fishnet_uid=fishnet_uid)
