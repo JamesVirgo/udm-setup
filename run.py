@@ -533,7 +533,7 @@ def run():
     if settlement_csv_path is not None:
         write_settlement_data(settlement_csv_path, output_dir)
 
-    exit(2)
+    #exit(2)
     # run the processing
     #run_processing(files=vector_file_list, fishnet=fishnet_file, area_codes=lads, output_dir=output_dir, fishnet_uid=fishnet_uid)
     return
