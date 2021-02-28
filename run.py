@@ -474,10 +474,18 @@ def run():
     vector_file_list = glob.glob(os.path.join(input_dir, 'vectorfiles', '*.*'))
 
     # get attractor .csv
-    attractor_csv_path = glob.glob(os.path.join(input_dir, data_dir_attractor_csv, '*.csv'))[0]
+    attractor_csv_path = glob.glob(os.path.join(input_dir, data_dir_attractor_csv, '*.csv'))
+    if len(attractor_csv_path) == 1:
+        attractor_csv_path = attractor_csv_path[0]
+    else:
+        attractor_csv_path = None
 
     # get constraint .csv
-    constraint_csv_path = glob.glob(os.path.join(input_dir, data_dir_constraint_csv, '*.csv'))[0]
+    constraint_csv_path = glob.glob(os.path.join(input_dir, data_dir_constraint_csv, '*.csv'))
+    if len(constraint_csv_path) == 1:
+        constraint_csv_path = constraint_csv_path[0]
+    else:
+        constraint_csv_path = None
 
     # get the list of attractor files
     attractor_file_list = glob.glob(os.path.join(input_dir, data_dir_attractors, '*.*'))
@@ -486,7 +494,11 @@ def run():
     constraint_file_list = glob.glob(os.path.join(input_dir, data_dir_constraints, '*.*'))
 
     # get the new settlement location file
-    settlement_csv_path = glob.glob(os.path.join(input_dir, data_dir_new_settlement_csv, '*.csv'))[0]
+    settlement_csv_path = glob.glob(os.path.join(input_dir, data_dir_new_settlement_csv, '*.csv'))
+    if len(settlement_csv_path) == 1:
+        settlement_csv_path = settlement_csv_path[0]
+    else:
+        settlement_csv_path = None
 
     # read the csv input file and save udm input file
     if attractor_csv_path is not None:
