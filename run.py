@@ -269,11 +269,11 @@ def check_files_exist(df, data_file_list, data_dir):
             if file_format == 'vector':
                 to_rasterise.append(expected_file)
                 # this should then rasterise is using the passed fishnet
-            else:
+            #else:
                 # move file to correct output location
                 # print(os.path.join(data_files[expected_file]))
                 # print(os.path.join(data_dir, expected_file))
-                copyfile(os.path.join(data_files[expected_file]), os.path.join(data_dir, expected_file + '.' + data_files[expected_file].split('.')[-1]))
+            copyfile(os.path.join(data_files[expected_file]), os.path.join(data_dir, expected_file + '.' + data_files[expected_file].split('.')[-1]))
         else:
             # file not found, return error
             print('ERROR! Could not find expected file (%s). Passed files: %s.' %(expected_file, data_file_list))
@@ -525,9 +525,9 @@ def run():
         constraint_files_to_rasterise = check_files_exist(df_constraints, constraint_file_list, output_dir)
 
         # rasterise files
-        for file in constraint_files_to_rasterise:
-            # get file name
-            rasterise(data=file, fishnet=fishnet_file, output_filename='')
+        #for file in constraint_files_to_rasterise:
+        #    # get file name
+        #    rasterise(data=file, fishnet=fishnet_file, output_filename='')
 
     # sort the new settlement location input
     if settlement_csv_path is not None:
@@ -535,7 +535,7 @@ def run():
 
     exit(2)
     # run the processing
-    run_processing(files=vector_file_list, fishnet=fishnet_file, area_codes=lads, output_dir=output_dir, fishnet_uid=fishnet_uid)
+    #run_processing(files=vector_file_list, fishnet=fishnet_file, area_codes=lads, output_dir=output_dir, fishnet_uid=fishnet_uid)
     return
 
 
