@@ -150,6 +150,26 @@ def move_output(file_name, output_dir):
     return
 
 
+def load_parameter_noofdwellings(start_value, end_value, output_dir):
+    """
+    Write the parameter to the csv file (in_zonal_pop) and save into correct dir
+
+    Not sure where initial population value will come from?
+    """
+    initial_population = list(start_value)
+    final_population = list(end_value)
+
+    # create df and create columns with values
+    df = pandas.DataFrame()
+    df['pop_initial'] = initial_population
+    df['pop_final'] = final_population
+
+    # save dataframe
+    df.to_csv(os.path.join(output_dir, 'in_zonal_pop.csv'), index=False, columns=['pop_initial', 'pop_final'])
+
+    return
+
+
 def read_attractor_csv(input_file_path, output_dir):
     """
     Read user input attractor csv and write udm input. Return DF for other methods.
@@ -234,8 +254,6 @@ def check_files_exist(df, data_file_list, data_dir):
             print('ERROR! Could not find expected file (%s). Passed files: %s.' %(expected_file, data_file_list))
             exit(2)
             return
-
-    return
 
     return
 
@@ -418,6 +436,9 @@ def run():
 
     # get the number of dwellings if passed by the user
     number_of_new_dwellings = os.getenv('NEW_DWELLINGS')
+    initial_population = os.getenv('INITIAL_POPULATION')
+    if number_of_new_dwellings is not None:
+        load_parameter_noofdwellings(initial_population, number_of_new_dwellings, output_dir)
 
     # GET DATA FILES
     # get the fishnet file

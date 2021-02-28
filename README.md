@@ -19,6 +19,11 @@ Three usage patterns:
 
 ### Number of new dwellings
 An integer value for the number of new dwellings to be built
+* key = NEW_DWELLINGS
+
+### Initial population
+An integer value for the initial population
+* key = INITIAL_POPULATION
 
 ### Attractor input file
 * file type: .csv 
