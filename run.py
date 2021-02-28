@@ -64,7 +64,7 @@ def rasterise(data, fishnet=None, area_scale='lad', area_codes=['E08000021'], ou
     """
     if '.' not in output_filename:
         output_filename = output_filename+'.tif'
-    print(output_filename)
+
     if fishnet is None:
         Rasteriser(
             data,  # Extracted GeoJSON data
@@ -244,7 +244,12 @@ def read_constraint_csv(input_file_path, output_dir):
 def check_files_exist(df, data_file_list, data_dir):
     """
     Check each of the files defined by the user exist
+
+    Return a list of files which need rasterising or an error if a file can't be found.
     """
+    # create a list object to store any files which are found and in vectore format
+    to_rasterise = []
+
     # get the list of defined names to check for files
     expected_file_list = df['name'].to_list()
 
@@ -259,16 +264,23 @@ def check_files_exist(df, data_file_list, data_dir):
         if expected_file in data_files.keys():
             # file found
             # move to data directory
-            print(os.path.join(data_files[expected_file]))
-            print(os.path.join(data_dir, expected_file))
-            copyfile(os.path.join(data_files[expected_file]), os.path.join(data_dir, expected_file + '.' + data_files[expected_file].split('.')[-1]))
+            df_ = df.loc[df['name'] == expected_file]
+            file_format = df_['format'].to_list()[0]
+            if file_format == 'vector':
+                to_rasterise.append(expected_file)
+                # this should then rasterise is using the passed fishnet
+            else:
+                # move file to correct output location
+                # print(os.path.join(data_files[expected_file]))
+                # print(os.path.join(data_dir, expected_file))
+                copyfile(os.path.join(data_files[expected_file]), os.path.join(data_dir, expected_file + '.' + data_files[expected_file].split('.')[-1]))
         else:
             # file not found, return error
             print('ERROR! Could not find expected file (%s). Passed files: %s.' %(expected_file, data_file_list))
             exit(2)
             return
 
-    return
+    return to_rasterise
 
 
 def run_processing(output_dir='/data/outputs', files=[], layers={}, area_codes=['E00042673',], area_scale='oa', fishnet=None, fishnet_uid='FID'):
@@ -504,13 +516,18 @@ def run():
     if attractor_csv_path is not None:
         df_attractors = read_attractor_csv(attractor_csv_path, output_dir)
         # check the expected attractor files exist
-        check_files_exist(df_attractors, attractor_file_list, output_dir)
+        attractor_files_to_rasterise = check_files_exist(df_attractors, attractor_file_list, output_dir)
 
     # read the csv input file and save udm input file
     if constraint_csv_path is not None:
         df_constraints = read_constraint_csv(constraint_csv_path, output_dir)
         # check the expected constraint files exists
-        check_files_exist(df_constraints, constraint_file_list, output_dir)
+        constraint_files_to_rasterise = check_files_exist(df_constraints, constraint_file_list, output_dir)
+
+        # rasterise files
+        for file in constraint_files_to_rasterise:
+            # get file name
+            rasterise(data=file, fishnet=fishnet_file, output_filename='')
 
     # sort the new settlement location input
     if settlement_csv_path is not None:

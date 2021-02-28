@@ -10,10 +10,16 @@ Setup data for UDM model for DAFNI. Expects currently
 * a fishnet file (optional)
 
 ## Usage
-Three usage patterns:  
-(1) Generate a grid for rasterising data with (only)  
-(2) Rasterise vector datasets (input) using a grid  
-(3) Download and rasterise data from NISMOD-DB API
+Two main uses:
+  * setup files for running the UDM model
+  * rasterise a file or list of files
+
+### Running UDM model
+The model accepts all the inputs required for setting up a UDM model run. See the 'Input definitions' section below.  
+All data layers for the attractors and constraints should be rasterised already. Functionality to rasterise vector files when passed has not been enabled yet.
+
+### Rasterising files
+This standalone function does not currently work, this needs updating.
 
 ## Input definitions
 
@@ -26,6 +32,7 @@ An integer value for the initial population
 * key = INITIAL_POPULATION
 
 ### Attractor input file
+* data director: attractor_csv
 * file type: .csv 
 * headings:
   * name (layer/filename), needs to match the name of the file on DAFNI
@@ -33,6 +40,7 @@ An integer value for the initial population
   * weight (integer weighting value, between 0-1)
 
 ### Constraint input file
+* data directory: constraint_csv
 * file type: .csv
 * headings:
   * name (layer/filename), needs to match the name of the file on DAFNI
@@ -41,22 +49,28 @@ An integer value for the initial population
     
 ### Attractor datasets (optional)
 A list/directory of attractor datasets which are defined are raster or vector in the attractors input file
+* data directory: attractors
 
 ### Constraint datasets (optional)
 A list/directory of constraint datasets which are defined as raster or vector in the constraints input file
+* data directory: constraints
 
 ### Fishnet file (optional)
-A vector Fishnet file    
+A vector Fishnet file
+* data directory: fishnet
 
 ### New settlement locations
 A .csv file for new settlement locations to consider when locating new dwellings.
+* data directory: settlement_csv
 * file type: .csv
 * headings:
   * name - a name for the settlement location (could just be an ID)
   * x - the X coordiante for the new settlement location (in British National Grid)
   * y - the y coordiante for the new settlement location (in British National Grid)
 
-### Methods
+## Methods
+!!! This section needs to be updated !!!  
+
 #### (1) Generate a grid
 To generate a grid only using a list of LADs or GOR's  
 `<example code here>`
