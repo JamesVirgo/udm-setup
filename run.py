@@ -150,6 +150,19 @@ def move_output(file_name, output_dir):
     return
 
 
+def write_settlement_data(file_path, output_dir):
+    """
+    Take the input csv path and write to the required format for UDM
+    """
+    # read in file
+    df = pandas.read_csv(file_path)
+
+    # save csv
+    df.to_csv(os.path.join(output_dir, 'new_settlements.csv'), index=False, columns=['name', 'x', 'y'])
+
+    return
+
+
 def load_parameter_noofdwellings(start_value, end_value, output_dir):
     """
     Write the parameter to the csv file (in_zonal_pop) and save into correct dir
@@ -406,12 +419,17 @@ def run():
     # data dirs
     # attractor csv
     data_dir_attractor_csv = 'attractor_csv'
+    attractor_csv_path = None
     # attractor csv
     data_dir_constraint_csv = 'constraint_csv'
+    constraint_csv_path = None
     # attractors
     data_dir_attractors = 'attractors'
     # constraints
     data_dir_constraints = 'constraints'
+    # new settlement csv
+    data_dir_new_settlement_csv = 'settlement_csv'
+    settlement_csv_path = None
 
     # declare as None, future updates will use these to check for valid set of inputs
     fishnet_file = None
@@ -456,7 +474,7 @@ def run():
     vector_file_list = glob.glob(os.path.join(input_dir, 'vectorfiles', '*.*'))
 
     # get attractor .csv
-    attactor_csv_path = glob.glob(os.path.join(input_dir, data_dir_attractor_csv, '*.csv'))[0]
+    attractor_csv_path = glob.glob(os.path.join(input_dir, data_dir_attractor_csv, '*.csv'))[0]
 
     # get constraint .csv
     constraint_csv_path = glob.glob(os.path.join(input_dir, data_dir_constraint_csv, '*.csv'))[0]
@@ -467,15 +485,24 @@ def run():
     # get the list of constraint files
     constraint_file_list = glob.glob(os.path.join(input_dir, data_dir_constraints, '*.*'))
 
-    # read the csv input file and save udm input file
-    df_attractors = read_attractor_csv(attactor_csv_path, output_dir)
-    # check the expected attractor files exist
-    check_files_exist(df_attractors, attractor_file_list, output_dir)
+    # get the new settlement location file
+    settlement_csv_path = glob.glob(os.path.join(input_dir, data_dir_new_settlement_csv, '*.csv'))[0]
 
     # read the csv input file and save udm input file
-    df_constraints = read_constraint_csv(constraint_csv_path, output_dir)
-    # check the expected constraint files exists
-    check_files_exist(df_constraints, constraint_file_list, output_dir)
+    if attractor_csv_path is not None:
+        df_attractors = read_attractor_csv(attractor_csv_path, output_dir)
+        # check the expected attractor files exist
+        check_files_exist(df_attractors, attractor_file_list, output_dir)
+
+    # read the csv input file and save udm input file
+    if constraint_csv_path is not None:
+        df_constraints = read_constraint_csv(constraint_csv_path, output_dir)
+        # check the expected constraint files exists
+        check_files_exist(df_constraints, constraint_file_list, output_dir)
+
+    # sort the new settlement location input
+    if settlement_csv_path is not None:
+        write_settlement_data(settlement_csv_path, output_dir)
 
     exit(2)
     # run the processing

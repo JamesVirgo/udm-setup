@@ -48,6 +48,14 @@ A list/directory of constraint datasets which are defined as raster or vector in
 ### Fishnet file (optional)
 A vector Fishnet file    
 
+### New settlement locations
+A .csv file for new settlement locations to consider when locating new dwellings.
+* file type: .csv
+* headings:
+  * name - a name for the settlement location (could just be an ID)
+  * x - the X coordiante for the new settlement location (in British National Grid)
+  * y - the y coordiante for the new settlement location (in British National Grid)
+
 ### Methods
 #### (1) Generate a grid
 To generate a grid only using a list of LADs or GOR's  
