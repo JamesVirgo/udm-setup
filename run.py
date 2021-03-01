@@ -426,7 +426,7 @@ def run():
     data_path = os.getenv('DATA_PATH', '/data')
 
     input_dir = os.path.join(data_path, 'inputs')
-    output_dir = os.path.join(data_path, 'outputs')
+    output_dir = os.path.join(data_path, 'outputs', 'data')
 
     # data dirs
     # attractor csv
