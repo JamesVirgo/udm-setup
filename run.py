@@ -459,7 +459,7 @@ def run():
         exit(1)
     if not os.path.exists(output_dir):
 
-        os.mkdirs(output_dir)
+        os.makedirs(output_dir, exist_ok=True)
 
     # GET PARAMETERS
     # get the fishnet UID if passed by user
