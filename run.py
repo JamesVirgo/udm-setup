@@ -158,7 +158,7 @@ def write_settlement_data(file_path, output_dir):
     df = pandas.read_csv(file_path)
 
     # save csv
-    df.to_csv(os.path.join(output_dir, 'new_settlements.csv'), index=False, columns=['name', 'x', 'y'])
+    df.to_csv(os.path.join(output_dir, 'new_settlements.csv'), index=False, columns=['x', 'y'])
 
     return
 
