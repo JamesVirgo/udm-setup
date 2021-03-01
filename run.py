@@ -458,7 +458,8 @@ def run():
         print('ERROR! Input directory could not be found! Details. Searched for %s' % input_dir)
         exit(1)
     if not os.path.exists(output_dir):
-        os.mkdir(output_dir)
+
+        os.mkdirs(output_dir)
 
     # GET PARAMETERS
     # get the fishnet UID if passed by user
