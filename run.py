@@ -237,6 +237,7 @@ def read_constraint_csv(input_file_path, output_dir):
     df['asc'] = asc_column
 
     df.to_csv(os.path.join(output_dir, 'in_mce_ras_int.csv'), index=False, columns=['asc','csv','weight','convert'])
+    df.to_csv(os.path.join(output_dir, 'in_udm_ras.csv'), index=False, columns=['asc','csv','convert'])
 
     return df
 
@@ -534,9 +535,9 @@ def run():
     if settlement_csv_path is not None:
         write_settlement_data(settlement_csv_path, output_dir)
 
-    #exit(2)
-    # run the processing
-    #run_processing(files=vector_file_list, fishnet=fishnet_file, area_codes=lads, output_dir=output_dir, fishnet_uid=fishnet_uid)
+    # run the processing (if just rasterising from files)
+    if vector_file_list is not None:
+        run_processing(files=vector_file_list, fishnet=fishnet_file, area_codes=lads, output_dir=output_dir, fishnet_uid=fishnet_uid)
     return
 
 
