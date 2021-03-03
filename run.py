@@ -169,8 +169,8 @@ def load_parameter_noofdwellings(start_value, end_value, output_dir):
 
     Not sure where initial population value will come from?
     """
-    initial_population = list(start_value)
-    final_population = list(end_value)
+    initial_population = [start_value]
+    final_population = [end_value]
 
     # create df and create columns with values
     df = pandas.DataFrame()
@@ -237,7 +237,7 @@ def read_constraint_csv(input_file_path, output_dir):
     df['asc'] = asc_column
 
     df.to_csv(os.path.join(output_dir, 'in_mce_ras_int.csv'), index=False, columns=['asc','csv','weight','convert'])
-    df.to_csv(os.path.join(output_dir, 'in_udm_ras.csv'), index=False, columns=['asc','csv','convert'])
+    #df.to_csv(os.path.join(output_dir, 'in_udm_ras.csv'), index=False, columns=['asc','csv','convert'])
 
     return df
 
@@ -437,9 +437,9 @@ def run():
     data_dir_constraint_csv = 'constraint_csv'
     constraint_csv_path = None
     # attractors
-    data_dir_attractors = 'attractors'
+    data_dir_attractors = 'data_files'
     # constraints
-    data_dir_constraints = 'constraints'
+    data_dir_constraints = 'data_files'
     # new settlement csv
     data_dir_new_settlement_csv = 'settlement_csv'
     settlement_csv_path = None
@@ -467,22 +467,30 @@ def run():
     fishnet_uid = os.getenv('FISHNET_UID')
 
     # get the number of dwellings if passed by the user
-    number_of_new_dwellings = os.getenv('NEW_DWELLINGS')
-    initial_population = os.getenv('INITIAL_POPULATION')
+    number_of_new_dwellings = int(os.getenv('NEW_DWELLINGS'))
+    print('Number of dwellings:', number_of_new_dwellings)
+    initial_population = int(os.getenv('INITIAL_POPULATION'))
     if number_of_new_dwellings is not None:
         load_parameter_noofdwellings(initial_population, number_of_new_dwellings, output_dir)
 
     # GET DATA FILES
     # get the fishnet file
-    fishnet_file = glob.glob(os.path.join(input_dir, 'fishnet', '*.gpkg')) + glob.glob(os.path.join(input_dir, 'fishnet', '*.geojson'))
-    if len(fishnet_file) == 0:
-        print('ERROR! No fishnet file found in dir (%s).' % os.path.join(input_dir, 'fishnet'))
-        exit(1)
-    elif len(fishnet_file) > 1:
-        print('ERROR! More than one fishnet file found (%s). Only one is required.' % fishnet_file)
-        exit(1)
-    else:
-        fishnet_file = fishnet_file[0]
+    #fishnet_file = glob.glob(os.path.join(input_dir, 'fishnet', '*.gpkg')) + glob.glob(os.path.join(input_dir, 'fishnet', '*.geojson'))
+    #if len(fishnet_file) == 0:
+    #    print('ERROR! No fishnet file found in dir (%s).' % os.path.join(input_dir, 'fishnet'))
+    #    exit(1)
+    #elif len(fishnet_file) > 1:
+    #    print('ERROR! More than one fishnet file found (%s). Only one is required.' % fishnet_file)
+    #    exit(1)
+    #else:
+    #    fishnet_file = fishnet_file[0]
+
+    # for DAFNI set up, copy all files from data files fir to output dir
+    source_files = os.listdir(os.path.join(input_dir, data_dir_attractors))
+    for file_name in source_files:
+        complete_file_name = os.path.join(input_dir, data_dir_attractors, file_name)
+        copyfile(complete_file_name, os.path.join(output_dir, file_name))
+
 
     # get the list of files to rasterise
     vector_file_list = glob.glob(os.path.join(input_dir, 'vectorfiles', '*.*'))
@@ -536,8 +544,9 @@ def run():
         write_settlement_data(settlement_csv_path, output_dir)
 
     # run the processing (if just rasterising from files)
-    if vector_file_list is not None:
-        run_processing(files=vector_file_list, fishnet=fishnet_file, area_codes=lads, output_dir=output_dir, fishnet_uid=fishnet_uid)
+    #print(vector_file_list)
+    #if vector_file_list is not None or len(vector_file_list) > 0:
+    #    run_processing(files=vector_file_list, fishnet=fishnet_file, area_codes=lads, output_dir=output_dir, fishnet_uid=fishnet_uid)
     return
 
 

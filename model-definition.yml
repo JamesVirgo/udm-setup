@@ -22,56 +22,39 @@ spec:
       - name: INITIAL_POPULATION
         title: Initial population
         desc: The initial population in the area
-        type: int
-        default: 10
+        type: integer
+        default: 0
         min: 0
       - name: NEW_DWELLINGS
         title: New dwellings
         desc: The number of new dwellings to place in the area
-        type: int
-        default: 10
+        type: integer
+        default: 100000
         min: 0
     dataslots:
       - name: attractor definition(s)
-          description: >
-            A .csv file which defines the attractor layers and their weight
-          default:
-            - uid:
-              versionUid:
-          path: inputs/attractor_csv
-          required: true
+        description: >
+          A .csv file which defines the attractor layers and their weight
+        path: inputs/attractor_csv
+        required: false
       - name: constraint definition(s)
-          description: >
-            A .csv file which defines the constraint layers and their weight
-          default:
-            - uid:
-              versionUid:
-          path: inputs/constraint_csv
-          required: true
-      - name: attractor datasets
-          description: >
-            A set of files as defined in the attractor definition file
-          default:
-            - uid:
-              versionUid:
-          path: inputs/attractors
-          required: true
-      - name: constraint datasets
-          description: >
-            A set of files defined in the constraint definition file
-          default:
-            - uid:
-              versionUid:
-          path: inputs/constraints
-          required: true
+        description: >
+          A .csv file which defines the constraint layers and their weight
+        path: inputs/constraint_csv
+        required: false
+      - name: datasets
+        description: >
+          A set of files including all data layers (constraints, attractors and parameter files) required for running the UDM model.
+        default:
+          - uid: 0a523a56-46d4-4b10-b86c-3110f29a155d
+            versionUid: 6f2a9953-39d2-45aa-98f9-0d8973cc8ea2
+        path: inputs/data_files
+        required: false
       - name: new settlement locations
-          description: >
-            A .csv file which defines the locations of new settlements
-          default:
-            - uid:
-              versionUid:
-          path: inputs/settlement_csv
-          required: true
+        description: >
+          A .csv file which defines the locations of new settlements
+        path: inputs/settlement_csv
+        required: false
       - name: Fishnet
         description: >
           A grid/fishnet vector format file (.geojson, .gpkg)
@@ -80,14 +63,7 @@ spec:
             versionUid: 9aab4978-a60a-41bc-a36e-f8752f989d59
         path: inputs/fishnet
         required: false
-      - name: Features
-        description: >
-          A file containing vector features to rasterize (.geojson, .gpkg)
-        default:
-          - uid: 787e608f-f435-426f-8e2a-054dac8fc10e
-            versionUid: 7f6182ba-60b2-4ef9-bfa0-e6c8eae64aee
-        path: inputs/vectorfiles
-        required: false
+
 
   outputs:
     datasets:
