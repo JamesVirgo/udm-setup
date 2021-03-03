@@ -35,11 +35,17 @@ spec:
       - name: attractor definition(s)
         description: >
           A .csv file which defines the attractor layers and their weight
+        default:
+          - uid: b1b4897f-5d5e-44f7-8ad2-2be0c6bd347f
+            versionUid: 5ef92456-4077-4e8f-a4de-67681841985e
         path: inputs/attractor_csv
         required: false
       - name: constraint definition(s)
         description: >
           A .csv file which defines the constraint layers and their weight
+        default:
+          - uid: eb326efc-5264-4912-a1cb-78b85b415bf9
+            versionUid: dde54dc8-1444-4d30-965d-6bfde7d6219d
         path: inputs/constraint_csv
         required: false
       - name: datasets
