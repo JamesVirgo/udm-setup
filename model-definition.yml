@@ -59,6 +59,9 @@ spec:
       - name: new settlement locations
         description: >
           A .csv file which defines the locations of new settlements
+        default:
+          - uid: 54767ea6-3cf7-4c28-90be-adcf970e60b0
+            versionUid: 54ea267b-1897-46b7-b7aa-73c32e0db161
         path: inputs/settlement_csv
         required: false
       - name: Fishnet

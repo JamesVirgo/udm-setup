@@ -59,7 +59,7 @@ A list/directory of constraint datasets which are defined as raster or vector in
 A vector Fishnet file
 * data directory: fishnet
 
-### New settlement locations
+### New settlement location**s
 A .csv file for new settlement locations to consider when locating new dwellings.
 * data directory: settlement_csv
 * file type: .csv
